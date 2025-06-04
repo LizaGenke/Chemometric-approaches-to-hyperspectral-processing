@@ -1,3 +1,8 @@
 ipykernel==6.29.5
 matplotlib==3.10.1
 scipy==1.15.2
+torch==2.7.0
+segment_anything @ git+https://github.com/facebookresearch/segment-anything.git@dca509fe793f601edb92606367a655c15ac00fdf
+supervision==0.25.1
+pysptools==0.15.0
+scikit-learn==1.6.1
