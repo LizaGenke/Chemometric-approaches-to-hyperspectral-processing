@@ -6,3 +6,6 @@ segment_anything @ git+https://github.com/facebookresearch/segment-anything.git@
 supervision==0.25.1
 pysptools==0.15.0
 scikit-learn==1.6.1
+nippy @ git+https://github.com/uef-bbc/nippy
+tensorflow==2.19.0
+kennard-stone==3.0.0
