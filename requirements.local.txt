@@ -11,3 +11,4 @@ nippy @ git+https://github.com/uef-bbc/nippy
 tensorflow==2.19.0
 kennard-stone==3.0.0
 pycaltransfer==0.1.8
+ultralytics==8.3.181
