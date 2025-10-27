@@ -12,6 +12,7 @@
 | `data_fusion.ipynb` | Fusion of Information from Different Sensors | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LizaGenke/Chemometric-approaches-to-hyperspectral-processing/blob/main/data_fusion.ipynb) |
 | `model_transfer.ipynb` | Model Transfer Between Sensors | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LizaGenke/Chemometric-approaches-to-hyperspectral-processing/blob/main/model_transfer.ipynb) |
 | `model_maintenance.ipynb` | Model Maintenance and Correction Strategies | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LizaGenke/Chemometric-approaches-to-hyperspectral-processing/blob/main/model_maintenance.ipynb) |
+| `using_pretrained_ai_models.ipynb` | Using various pre-trained AI models | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LizaGenke/Chemometric-approaches-to-hyperspectral-processing/blob/main/using_pretrained_ai_models.ipynb) |
 
 ## Local setup
 
