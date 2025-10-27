@@ -10,3 +10,4 @@ scikit-learn==1.6.1
 nippy @ git+https://github.com/uef-bbc/nippy
 tensorflow==2.19.0
 kennard-stone==3.0.0
+pycaltransfer==0.1.8

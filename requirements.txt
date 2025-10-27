@@ -3,3 +3,4 @@ nippy @ git+https://github.com/uef-bbc/nippy
 supervision==0.25.1
 pysptools==0.15.0
 kennard-stone==3.0.0
+pycaltransfer==0.1.8
