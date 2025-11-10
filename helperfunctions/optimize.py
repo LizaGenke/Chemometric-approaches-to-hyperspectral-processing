@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.model_selection import cross_val_predict
-from sklearn.metrics import root_mean_squared_error, r2_score
+from sklearn.metrics import root_mean_squared_error
 
 def optimise_pls_cv_test(X_train, y_train, X_test, y_test, n_comp):
     """

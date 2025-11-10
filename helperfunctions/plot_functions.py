@@ -1,6 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import r2_score, root_mean_squared_error
+from sklearn.metrics import root_mean_squared_error
+from scipy.stats import linregress
+
+def r2_score(y_true, y_pred):
+    y_true = np.ravel(y_true)
+    y_pred = np.ravel(y_pred)
+    slope, intercept, r_val, p_val, se = linregress(y_true, y_pred)
+    r2 = r_val**2
+    return r2
+
 
 def plot_cv_vs_test(y_cal, y_cv, y_test, y_test_pred, plot_titles=["Cross-Validated Predictions", "Test Predictions"]):
     """
