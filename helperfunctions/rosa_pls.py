@@ -1,6 +1,6 @@
 import numpy as np
-from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import KFold
+from sklearn.metrics import mean_squared_error
 
 class PLS:
     def __init__(self, ncomp, weights=None):
@@ -137,46 +137,46 @@ def rosa_pls(X_blocks, Y, ncomp_list):
 
     return results
 
-def optimise_rosa_pls_cv_test(X_train_blocks, y_train, X_test_blocks, y_test, comp_combinations, n_splits=5):
-    rmse_cv = np.zeros(len(comp_combinations))
-    rmse_train = np.zeros(len(comp_combinations))
-    rmse_test = np.zeros(len(comp_combinations))
+def rosa_predict(results, X_new_blocks):
+    n_samples_new = X_new_blocks[0].shape[0]
+    n_targets = results[0]['pls'].ymeans.shape[0]
+    y_pred = np.zeros((n_samples_new, n_targets))
+    X_res = [X.copy() for X in X_new_blocks]
+    
+    for i, res in enumerate(results):
+        pls = res['pls']
+        ncomp = pls.ncomp
+        y_pred += pls.predict(X_res[i], nlv=ncomp)
+        
+        if i < len(results) - 1:
+            T_new = pls.transform(X_res[i])[:, :ncomp]
+            for j in range(i + 1, len(X_res)):
+                P = np.linalg.pinv(T_new) @ X_res[j]
+                X_res[j] -= T_new @ P
+    
+    return y_pred.ravel() if n_targets == 1 else y_pred
 
-    kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
-
-    for idx, comps_per_block in enumerate(comp_combinations):
-        y_cv_pred_all = np.zeros_like(y_train, dtype=float)
-
-        for train_idx, val_idx in kf.split(y_train):
-            X_train_fold = [X_block[train_idx] for X_block in X_train_blocks]
-            X_val_fold = [X_block[val_idx] for X_block in X_train_blocks]
-            y_train_fold = y_train[train_idx]
-
-            results = rosa_pls(X_train_fold, y_train_fold, comps_per_block)
-
-            y_val_pred = np.sum([
-                result['pls'].predict(X_val_fold[block_idx], comps_per_block[block_idx])
-                for block_idx, result in enumerate(results)
-            ], axis=0)
-
-            y_cv_pred_all[val_idx] = y_val_pred
-
-        # Fit on full training set to get train/test predictions
-        results_full = rosa_pls(X_train_blocks, y_train, comps_per_block)
-        y_train_pred = np.sum([r['Y_pred'] for r in results_full], axis=0)
-        y_test_pred = np.sum([
-            result['pls'].predict(X_test_blocks[k], comps_per_block[k])
-            for k, result in enumerate(results_full)
-        ], axis=0)
-
-        # Store RMSEs
-        rmse_cv[idx] = root_mean_squared_error(y_train, y_cv_pred_all)
-        rmse_train[idx] = root_mean_squared_error(y_train, y_train_pred)
-        rmse_test[idx] = root_mean_squared_error(y_test, y_test_pred)
-
-    # Find best by CV RMSE
-    best_idx = np.argmin(rmse_cv)
-    best_components = comp_combinations[best_idx]
-    print(f"Best component combination: {best_components}")
-
-    return best_components
+def rosa_cv_rmsep(X_blocks, Y, ncomp_candidates, nfolds=5, random_state=42):
+    kf = KFold(n_splits=nfolds, shuffle=True, random_state=random_state)
+    best_ncomp = None
+    best_rmsep = np.inf
+    
+    for ncomp_list in ncomp_candidates: 
+        errors = []
+        for train_idx, val_idx in kf.split(X_blocks[0]):
+            X_tr = [X[train_idx] for X in X_blocks]
+            Y_tr = Y[train_idx]
+            X_val = [X[val_idx] for X in X_blocks]
+            Y_val = Y[val_idx]
+            
+            res = rosa_pls(X_tr, Y_tr, ncomp_list)
+            Y_val_pred = rosa_predict(res, X_val)
+            
+            errors.append(np.sqrt(mean_squared_error(Y_val, Y_val_pred)))
+        
+        mean_rmsep = np.mean(errors)
+        if mean_rmsep < best_rmsep:
+            best_rmsep = mean_rmsep
+            best_ncomp = ncomp_list
+            
+    return best_ncomp, best_rmsep
