@@ -1,7 +1,9 @@
-/data
+*/data
 /output*
-/weights
-/results
+*/weights
+*/results
+*.keras
+*.pt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
